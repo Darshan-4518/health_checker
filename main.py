@@ -1,3 +1,3 @@
-import psutil
+from datetime import datetime
 
-print(f"{psutil.virtual_memory()[2]}%")
+print(datetime.now().strftime("%d-%m-%y %H:%M:%S"))
