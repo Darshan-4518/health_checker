@@ -1,3 +1,4 @@
+import os
 import subprocess
 import json
 import socket
@@ -113,7 +114,7 @@ def run(interval):
 
 
 if __name__ == "__main__" :
-    with open("health_checker.jsonl","w") as file:
-        pass
+    with open("health_checker.jsonl","w"),open("health_checker_pid.pid","w") as file:
+            file.write(str(os.getpid()))
     interval =int(sys.argv[1])
     run(interval)
