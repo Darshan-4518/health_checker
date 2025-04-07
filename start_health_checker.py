@@ -6,10 +6,11 @@ import sys
 from datetime import datetime
 from psutil import cpu_percent,virtual_memory,disk_usage
 
-device_status = dict()
+android_device_status = dict()
 
 #device health related methods
 
+#--android
 def get_battery_health_status(udid):
     health_status_flag = [None, "Unknown", "Good", "Overheat", "Dead", "Overvoltage", "Failure", "Cold"]
 
@@ -20,7 +21,7 @@ def get_battery_health_status(udid):
     return health_status_flag[int(value)]
 
 
-def get_available_devices():
+def get_available_android_devices():
     device_cmd = subprocess.run("adb devices", text=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
 
     output_of_device_cmd = device_cmd.stdout
@@ -39,10 +40,12 @@ def get_available_devices():
         if len(split_line) == 2:
             udid, status = split_line
             device_data = dict()
-            device_data['status'] = status
-            device_data['battery_health'] = None
-            if split_line[1] == 'device':
+            if status == 'device':
+                device_data['status'] = "Up"
                 device_data['battery_health'] = get_battery_health_status(udid)
+            else:
+                device_data['status'] = f"Down({status})"
+                device_data['battery_health'] = None
 
             current_status[udid] = device_data
 
@@ -50,21 +53,64 @@ def get_available_devices():
 
     return current_status
 
-def device_health():
-    current_status = get_available_devices()
+def android_device_health():
+    current_status = get_available_android_devices()
 
-    device_status_keys = set(device_status.keys())
+    device_status_keys = set(android_device_status.keys())
     current_status_keys = set(current_status.keys())
     for udid in current_status:
         if udid in device_status_keys:
-            device_status[udid]['status'] = current_status[udid]['status']
+            android_device_status[udid]['status'] = current_status[udid]['status']
             if current_status[udid]['battery_health']:
-                device_status[udid]['status'] = current_status[udid]['status']
+                android_device_status[udid]['battery_health'] = current_status[udid]['battery_health']
         else:
-            device_status[udid] = current_status[udid]
+            android_device_status[udid] = current_status[udid]
 
     for offline_udid in (device_status_keys - current_status_keys):
-        device_status[offline_udid]['status'] = "offline"
+        android_device_status[offline_udid]['status'] = "Down(disconnected)"
+
+#--ios
+
+ios_device_status = dict()
+
+def get_connected_ios_devices():
+    ios_devices_command = subprocess.run("idevice_id -l", stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
+
+    output = ios_devices_command.stdout
+
+    udid_of_connected_devices = output.split("\n")
+
+    current_ios_device_status = dict()
+
+    for index in range(len(udid_of_connected_devices)-1):
+        device_data = dict()
+        device_data['status'] = 'Up'
+        current_ios_device_status[udid_of_connected_devices[index]] = device_data
+
+    return current_ios_device_status
+
+def ios_device_health():
+    current_ios_device_status = get_connected_ios_devices()
+
+    current_ios_device_status_keys = set(current_ios_device_status.keys())
+    ios_device_status_keys = set(ios_device_status.keys())
+
+    for udid in current_ios_device_status_keys:
+        ios_device_status[udid] = current_ios_device_status[udid]
+
+    for udid in ios_device_status_keys - current_ios_device_status_keys:
+        ios_device_status[udid] = "Down(offline)"
+
+
+
+def marge_device_health_of_ios_android():
+    both_device_health = dict()
+    for key in android_device_status:
+        both_device_health[key] = android_device_status[key]
+    for key in ios_device_status:
+        both_device_health[key] = ios_device_status[key]
+
+    return both_device_health
 
 #server health related methods
 
@@ -95,14 +141,18 @@ def machine_ip():
     ips = [ip for ip in ip_address if not ip.startswith("127")]
     return ips[0]
 
-def run(interval):
+
+def run(interval=10):
     server_health_data = server_monitor_data(interval)
-    device_health()
+    android_device_health()
+    ios_device_health()
+
+    both_device_health = marge_device_health_of_ios_android()
 
     main_data = {
         "local_machine_ip" : machine_ip(),
         "timestamp" : datetime.now().strftime("%d-%m-%y %H:%M:%S"),
-        "device_health" : device_status,
+        "device_health" : both_device_health,
         "server_health" : server_health_data
     }
 
@@ -116,5 +166,11 @@ def run(interval):
 if __name__ == "__main__" :
     with open("health_checker.jsonl","w"),open("health_checker_pid.pid","w") as file:
             file.write(str(os.getpid()))
-    interval =int(sys.argv[1])
-    run(interval)
+
+    arguments = sys.argv
+
+    if len(arguments) > 1:
+        interval = int(arguments[1])
+        run(interval)
+    else:
+        run()

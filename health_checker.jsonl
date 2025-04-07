@@ -1,0 +1,226 @@
+{
+  "local_machine_ip": "192.168.31.247",
+  "timestamp": "07-04-25 15:40:15",
+  "device_health": {
+    "RZ8T60DDGKA": {
+      "status": "Up",
+      "battery_health": "Good"
+    },
+    "e4bf5b9175b1ed38ecf59ecb33112eb0c373ed4f": {
+      "status": "Up"
+    }
+  },
+  "server_health": {
+    "cpu": "4.1%",
+    "ram": "75.7%",
+    "storage": "92.61/245.11"
+  }
+}
+{
+  "local_machine_ip": "192.168.31.247",
+  "timestamp": "07-04-25 15:40:25",
+  "device_health": {
+    "RZ8T60DDGKA": {
+      "status": "Up",
+      "battery_health": "Good"
+    },
+    "e4bf5b9175b1ed38ecf59ecb33112eb0c373ed4f": {
+      "status": "Up"
+    }
+  },
+  "server_health": {
+    "cpu": "3.6%",
+    "ram": "75.6%",
+    "storage": "92.61/245.11"
+  }
+}
+{
+  "local_machine_ip": "192.168.31.247",
+  "timestamp": "07-04-25 15:40:35",
+  "device_health": {
+    "RZ8T60DDGKA": {
+      "status": "Down(disconnected)",
+      "battery_health": "Good"
+    },
+    "e4bf5b9175b1ed38ecf59ecb33112eb0c373ed4f": {
+      "status": "Up"
+    }
+  },
+  "server_health": {
+    "cpu": "5.2%",
+    "ram": "75.8%",
+    "storage": "92.61/245.11"
+  }
+}
+{
+  "local_machine_ip": "192.168.31.247",
+  "timestamp": "07-04-25 15:40:45",
+  "device_health": {
+    "RZ8T60DDGKA": {
+      "status": "Down(disconnected)",
+      "battery_health": "Good"
+    },
+    "e4bf5b9175b1ed38ecf59ecb33112eb0c373ed4f": {
+      "status": "Up"
+    }
+  },
+  "server_health": {
+    "cpu": "2.3%",
+    "ram": "75.6%",
+    "storage": "92.61/245.11"
+  }
+}
+{
+  "local_machine_ip": "192.168.31.247",
+  "timestamp": "07-04-25 15:40:55",
+  "device_health": {
+    "RZ8T60DDGKA": {
+      "status": "Down(disconnected)",
+      "battery_health": "Good"
+    },
+    "15946878310004W": {
+      "status": "Up",
+      "battery_health": "Good"
+    },
+    "e4bf5b9175b1ed38ecf59ecb33112eb0c373ed4f": {
+      "status": "Up"
+    }
+  },
+  "server_health": {
+    "cpu": "3.8%",
+    "ram": "76.4%",
+    "storage": "92.61/245.11"
+  }
+}
+{
+  "local_machine_ip": "192.168.31.247",
+  "timestamp": "07-04-25 15:41:05",
+  "device_health": {
+    "RZ8T60DDGKA": {
+      "status": "Down(disconnected)",
+      "battery_health": "Good"
+    },
+    "15946878310004W": {
+      "status": "Up",
+      "battery_health": "Good"
+    },
+    "e4bf5b9175b1ed38ecf59ecb33112eb0c373ed4f": {
+      "status": "Up"
+    }
+  },
+  "server_health": {
+    "cpu": "8.1%",
+    "ram": "76.8%",
+    "storage": "92.61/245.11"
+  }
+}
+{
+  "local_machine_ip": "192.168.31.247",
+  "timestamp": "07-04-25 15:41:16",
+  "device_health": {
+    "RZ8T60DDGKA": {
+      "status": "Down(disconnected)",
+      "battery_health": "Good"
+    },
+    "15946878310004W": {
+      "status": "Up",
+      "battery_health": "Good"
+    },
+    "e4bf5b9175b1ed38ecf59ecb33112eb0c373ed4f": {
+      "status": "Up"
+    }
+  },
+  "server_health": {
+    "cpu": "25.7%",
+    "ram": "78.5%",
+    "storage": "92.61/245.11"
+  }
+}
+{
+  "local_machine_ip": "192.168.31.247",
+  "timestamp": "07-04-25 15:41:26",
+  "device_health": {
+    "RZ8T60DDGKA": {
+      "status": "Down(disconnected)",
+      "battery_health": "Good"
+    },
+    "15946878310004W": {
+      "status": "Up",
+      "battery_health": "Good"
+    },
+    "e4bf5b9175b1ed38ecf59ecb33112eb0c373ed4f": {
+      "status": "Up"
+    }
+  },
+  "server_health": {
+    "cpu": "15.4%",
+    "ram": "77.8%",
+    "storage": "92.61/245.11"
+  }
+}
+{
+  "local_machine_ip": "192.168.31.247",
+  "timestamp": "07-04-25 15:41:36",
+  "device_health": {
+    "RZ8T60DDGKA": {
+      "status": "Down(disconnected)",
+      "battery_health": "Good"
+    },
+    "15946878310004W": {
+      "status": "Up",
+      "battery_health": "Good"
+    },
+    "e4bf5b9175b1ed38ecf59ecb33112eb0c373ed4f": {
+      "status": "Up"
+    }
+  },
+  "server_health": {
+    "cpu": "5.4%",
+    "ram": "77.9%",
+    "storage": "92.61/245.11"
+  }
+}
+{
+  "local_machine_ip": "192.168.31.247",
+  "timestamp": "07-04-25 15:41:46",
+  "device_health": {
+    "RZ8T60DDGKA": {
+      "status": "Down(disconnected)",
+      "battery_health": "Good"
+    },
+    "15946878310004W": {
+      "status": "Up",
+      "battery_health": "Good"
+    },
+    "e4bf5b9175b1ed38ecf59ecb33112eb0c373ed4f": {
+      "status": "Up"
+    }
+  },
+  "server_health": {
+    "cpu": "10.9%",
+    "ram": "78.2%",
+    "storage": "92.61/245.11"
+  }
+}
+{
+  "local_machine_ip": "192.168.31.247",
+  "timestamp": "07-04-25 15:41:56",
+  "device_health": {
+    "RZ8T60DDGKA": {
+      "status": "Down(disconnected)",
+      "battery_health": "Good"
+    },
+    "15946878310004W": {
+      "status": "Up",
+      "battery_health": "Good"
+    },
+    "e4bf5b9175b1ed38ecf59ecb33112eb0c373ed4f": {
+      "status": "Up"
+    }
+  },
+  "server_health": {
+    "cpu": "6.9%",
+    "ram": "77.4%",
+    "storage": "92.61/245.11"
+  }
+}
