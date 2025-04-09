@@ -7,13 +7,12 @@ import sys
 from datetime import datetime
 from psutil import cpu_percent,virtual_memory,disk_usage,process_iter
 
-
-
-android_device_status = dict()
-
 #device health related methods
 
 #--android
+
+android_device_status = dict()
+
 def get_battery_health_status(udid):
     health_status_flag = [None, "Unknown", "Good", "Overheat", "Dead", "Overvoltage", "Failure", "Cold"]
 
@@ -167,7 +166,6 @@ def run():
 
 
 def terminate_previous_run():
-
     current_time = datetime.now().strftime("%d-%m-%y %H:%M:%S")
     if os.path.exists(process_id_file_path):
         with open(process_id_file_path,"r") as pid_file:
