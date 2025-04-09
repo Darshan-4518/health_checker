@@ -1,10 +1,13 @@
 import os
+import signal
 import subprocess
 import json
 import socket
 import sys
 from datetime import datetime
-from psutil import cpu_percent,virtual_memory,disk_usage
+from psutil import cpu_percent,virtual_memory,disk_usage,process_iter
+
+
 
 android_device_status = dict()
 
@@ -14,11 +17,10 @@ android_device_status = dict()
 def get_battery_health_status(udid):
     health_status_flag = [None, "Unknown", "Good", "Overheat", "Dead", "Overvoltage", "Failure", "Cold"]
 
-    health_val = subprocess.run(f"adb -s {udid} shell dumpsys battery | grep -i  health", text=True,
+    health_val = subprocess.run("adb -s "+ udid + " shell dumpsys battery | grep -i health | awk 'NR==1 {print $2}'""", text=True,
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-    value = health_val.stdout.split(":")[1]
-
-    return health_status_flag[int(value)]
+    status = int(health_val.stdout)
+    return health_status_flag[status]
 
 
 def get_available_android_devices():
@@ -120,7 +122,7 @@ def convert_into_gb(bytes):
 
     return (bytes/constant1) * constant2
 
-def server_monitor_data(interval):
+def server_monitor_data():
     cpu_usage = cpu_percent(interval)
     ram_usage = virtual_memory()[2]
     server_storage =  disk_usage('/')
@@ -142,8 +144,9 @@ def machine_ip():
     return ips[0]
 
 
-def run(interval=10):
-    server_health_data = server_monitor_data(interval)
+def run():
+    print("Checking health of devices and server...")
+    server_health_data = server_monitor_data()
     android_device_health()
     ios_device_health()
 
@@ -156,21 +159,44 @@ def run(interval=10):
         "server_health" : server_health_data
     }
 
-    with open("health_checker.jsonl","a") as file:
+    with open(file_path,"a") as file:
         json.dump(main_data,file)
         file.write("\n")
 
-    run(interval)
+    run()
+
+
+def terminate_previous_run():
+
+    current_time = datetime.now().strftime("%d-%m-%y %H:%M:%S")
+    if os.path.exists(process_id_file_path):
+        with open(process_id_file_path,"r") as pid_file:
+            os.path.exists(file_path) and os.rename(file_path,f"{directory_path}/health_checker_{current_time}.jsonl")
+            pid = int(pid_file.read())
+            is_process_running(pid) and os.kill(pid, signal.SIGTERM)
+
+
+def is_process_running(pid):
+    for process in process_iter(['pid']):
+        if process.info['pid'] == pid :
+            return True
+
+    return False
 
 
 if __name__ == "__main__" :
-    with open("health_checker.jsonl","w"),open("health_checker_pid.pid","w") as file:
-            file.write(str(os.getpid()))
-
     arguments = sys.argv
+    directory_path = arguments[1]
+    process_id_file_path = directory_path + "/health_checker_pid.pid"
+    file_path = f"{arguments[1]}/health_checker.jsonl"
+    terminate_previous_run()
 
-    if len(arguments) > 1:
+
+
+    with open(file_path,"w"),open(process_id_file_path,"w") as file:
+            file.write(str(os.getpid()))
+    
+    interval = 10
+    if len(arguments) > 2:
         interval = int(arguments[1])
-        run(interval)
-    else:
-        run()
+    run()
