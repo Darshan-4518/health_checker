@@ -4,9 +4,8 @@ import subprocess
 import json
 import socket
 import sys
-from datetime import datetime
+from datetime import datetime,date
 from psutil import cpu_percent,virtual_memory,disk_usage,process_iter
-
 #device health related methods
 
 #--android
@@ -144,32 +143,39 @@ def machine_ip():
 
 
 def run():
-    print("Checking health of devices and server...")
-    server_health_data = server_monitor_data()
-    android_device_health()
-    ios_device_health()
+    history_data_file_name =  f"health_checker {date.today().strftime('%d-%m-%y')}.jsonl"
+    while True:
+        print("Checking health of devices and server...")
+        server_health_data = server_monitor_data()
+        android_device_health()
+        ios_device_health()
+        both_device_health = marge_device_health_of_ios_android()
 
-    both_device_health = marge_device_health_of_ios_android()
+        now = datetime.now()
+        current_timestamp = now.strftime("%d-%m-%y %H:%M:%S")
 
-    main_data = {
-        "local_machine_ip" : machine_ip(),
-        "timestamp" : datetime.now().strftime("%d-%m-%y %H:%M:%S"),
-        "device_health" : both_device_health,
-        "server_health" : server_health_data
-    }
+        if now.hour == 0:
+            history_data_file_path =  f"health_checker {date.today().strftime('%d-%m-%y')}.jsonl"
 
-    with open(file_path,"a") as file:
-        json.dump(main_data,file)
-        file.write("\n")
 
-    run()
+        main_data = {
+            "local_machine_ip" : machine_ip(),
+            "timestamp" : current_timestamp,
+            "device_health" : both_device_health,
+            "server_health" : server_health_data
+        }
+
+        with open(log_path + history_data_file_name,"a") as history_file , open(latest_data_file_path,"w") as latest_data_file:
+            json.dump(main_data,history_file)
+            json.dump(main_data,latest_data_file)
+            history_file.write("\n")
 
 
 def terminate_previous_run():
     current_time = datetime.now().strftime("%d-%m-%y %H:%M:%S")
     if os.path.exists(process_id_file_path):
         with open(process_id_file_path,"r") as pid_file:
-            os.path.exists(file_path) and os.rename(file_path,f"{directory_path}/health_checker_{current_time}.jsonl")
+            # os.path.exists(file_path) and os.rename(file_path,f"{directory_path}/health_checker_{current_time}.jsonl")
             pid = int(pid_file.read())
             is_process_running(pid) and os.kill(pid, signal.SIGTERM)
 
@@ -184,14 +190,21 @@ def is_process_running(pid):
 
 if __name__ == "__main__" :
     arguments = sys.argv
-    directory_path = arguments[1]
-    process_id_file_path = directory_path + "/health_checker_pid.pid"
-    file_path = f"{arguments[1]}/health_checker.jsonl"
+    server_path = arguments[1]
+    health_checker_directory_path = "/callshellscript/python_scripts/health_checker/"
+    full_path = server_path + health_checker_directory_path
+
+    log_path = full_path + "log/"
+
+    if not os.path.exists(log_path):
+        os.mkdir(log_path)
+
+    process_id_file_path = log_path + "health_checker_pid.pid"
+    latest_data_file_path = f"{log_path}health_checker.json"
     terminate_previous_run()
 
 
-
-    with open(file_path,"w"),open(process_id_file_path,"w") as file:
+    with open(process_id_file_path,"w") as file:
             file.write(str(os.getpid()))
     
     interval = 10
